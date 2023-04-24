@@ -11,6 +11,8 @@ class Main:
         
         self.editor = Editor()
         
+        #cursor
+        
     def run(self):
         while True:
             dt = self.clock.tick() / 1000

@@ -92,3 +92,4 @@ class Editor:
         self.display_surface.fill('white')
         self.draw_tile_lines()
         pygame.draw.circle(self.display_surface, 'red', self.origin, 10)
+        self.menu.display()

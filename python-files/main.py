@@ -14,9 +14,9 @@ class Main:
         self.editor = Editor()
         
         #cursor
-        surf = load('../graphics/cursors/mouse.png').convert_alpha()
+        surf = load('G:/Meu Drive/Pygame/MarioMaker/graphics/cursors/mouse.png').convert_alpha()
         cursor = pygame.cursors.Cursor((0, 0), surf)
-        pygame.mouse.set.cursor(cursor)
+        pygame.mouse.set_cursor(cursor)
         
     def run(self):
         while True:

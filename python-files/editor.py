@@ -35,6 +35,7 @@ class Editor:
                     sys.exit()
                 self.pan_input(event)
                 self.selection_hotkeys(event)
+                self.menu_click(event)
     
     def pan_input(self, event):
         # middle mouse button pressed / released
@@ -62,7 +63,11 @@ class Editor:
             if event.key == pygame.K_LEFT:
                 self.selection_index -= 1
         self.selection_index = max(2, min(self.selection_index, 18))
-     
+    
+    def menu_click(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN and self.menu.rect.collidepoint(mouse_pos()):
+            self.selection_index = self.menu.click(mouse_pos(), mouse_buttons())
+    
     # drawing
     def draw_tile_lines(self):
         cols = WINDOW_WIDTH // TILE_SIZE
@@ -92,4 +97,4 @@ class Editor:
         self.display_surface.fill('white')
         self.draw_tile_lines()
         pygame.draw.circle(self.display_surface, 'red', self.origin, 10)
-        self.menu.display()
+        self.menu.display(self.selection_index)

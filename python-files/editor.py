@@ -3,7 +3,9 @@ from pygame.math import Vector2 as vector
 from pygame.mouse import get_pressed as mouse_buttons
 from pygame.mouse import get_pos as mouse_pos
 from pygame.image import load
+
 from settings import *
+from support import *
 
 from menu import Menu
 
@@ -80,6 +82,23 @@ class Editor:
         
         def imports(self):
             self.water_bottom = load('G:/Meu Drive/Pygame/MarioMaker/graphics/terrain/water/water_bottom.png')
+            
+            # animations
+            self.animations = {3: {'frame index': 0, 'frames': ['surfaces'], 'length': 3}}
+            for key, value in EDITOR_DATA.items():
+                if value['graphics']:
+                    graphics = import_folder(value['graphics'])
+                    self.animations[key] = {
+                        'frame index': 0,
+                        'frames': graphics,
+                        'length': len(graphics)
+                    }
+        
+        def animation_update(self, dt):
+            for value in self.animations.values():
+                value['frame index'] += ANIMATION_SPEED * dt
+                if value['frame index'] >= value['length']:
+                    value['frame index'] = 0
         
         # input
         def event_loop(self):
@@ -170,9 +189,10 @@ class Editor:
                     if tile.water_on_top:
                         self.display_surface.blit(self.water_bottom, pos)
                     else:
-                        terrain_style = pygame.Surface((TILE_SIZE, TILE_SIZE))
-                        terrain_style.fill('red')
-                        self.display_surface.blit(terrain_style, pos)
+                        frames = self.animations[3]['frames']
+                        index = int(self.animations[3]['frame index'])
+                        surf = frames[index]
+                        self.display_surface.blit(surf, pos)
             
                 if tile.has_terrain:
                     terrain_string = ''.join(tile.terrain_neighbors)
@@ -181,19 +201,26 @@ class Editor:
                     
                 # coins
                 if tile.coin:
-                    terrain_style = pygame.Surface((TILE_SIZE, TILE_SIZE))
-                    terrain_style.fill('yellow')
-                    self.display_surface.blit(terrain_style, pos)
+                    frames = self.animations[tile.coin]['frames']
+                    index = int(self.animations[tile.coin]['frame index'])
+                    surf = frames[index]
+                    rect = surf.get_rect(center = (pos[0] + TILE_SIZE // 2, pos[1] + TILE_SIZE // 2))
+                    self.display_surface.blit(surf, rect)
                 
                 # enemies
                 if tile.enemy:
-                    terrain_style = pygame.Surface((TILE_SIZE, TILE_SIZE))
-                    terrain_style.fill('red')
-                    self.display_surface.blit(terrain_style, pos)
+                    frames = self.animations[tile.enemy]['frames']
+                    index = int(self.animations[tile.enemy]['frame index'])
+                    surf = frames[index]
+                    rect = surf.get_rect(midbottom = (pos[0] + TILE_SIZE // 2, pos[1] + TILE_SIZE))
+                    self.display_surface.blit(surf, rect)
         
         # update
         def run(self, dt):
             self.event_loop()
+            
+            # updating
+            self.animation_update(dt)
 
             # drawing
             self.display_surface.fill('gray')

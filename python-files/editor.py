@@ -7,6 +7,7 @@ from pygame.sprite import Group
 
 from settings import *
 from support import *
+from timer import Timer
 
 from menu import Menu
 
@@ -41,6 +42,7 @@ class Editor:
             # objects
             self.canvas_objects = pygame.sprite.Group()
             self.object_drag_active = False
+            self.object_timer = Timer(400)
             
             # Player
             CanvasObject(
@@ -124,6 +126,11 @@ class Editor:
                 if value['frame index'] >= value['length']:
                     value['frame index'] = 0
         
+        def mouse_on_object(self):
+            for sprite in self.canvas_objects:
+                if sprite.rect.collidepoint(mouse_pos()):
+                    return sprite
+        
         # input
         def event_loop(self):
             for event in pygame.event.get():
@@ -191,17 +198,26 @@ class Editor:
                         self.check_neighbors(current_cell)
                         self.last_selected_cell = current_cell
                 else: # object
-                    CanvasObject(
-                        pos = mouse_pos(),
-                        frames = self.animations[self.selection_index]['frames'],
-                        tile_id = self.selection_index,
-                        origin = self.origin,
-                        group = self.canvas_objects,
-                    )
+                    if not self.object_timer.active:
+                        CanvasObject(
+                            pos = mouse_pos(),
+                            frames = self.animations[self.selection_index]['frames'],
+                            tile_id = self.selection_index,
+                            origin = self.origin,
+                            group = self.canvas_objects,
+                        )
+                        self.object_timer.activate()
 
         def canvas_remove(self):
             if mouse_buttons()[2] and not self.menu.rect.collidepoint(mouse_pos()):
                 
+                # delete object
+                selected_object = self.mouse_on_object()
+                if selected_object:
+                    if EDITOR_DATA[selected_object.tile_id]['style'] not in ('player', 'sky'):
+                        selected_object.kill()
+                
+                # delete tiles
                 if self.canvas_data:
                     current_cell = self.get_current_cell()
                     if current_cell in self.canvas_data:
@@ -224,7 +240,6 @@ class Editor:
                         sprite.drag_end(self.origin)
                         self.object_drag_active = False
                 
-        
         # drawing 
         def draw_tile_lines(self):
             cols = WINDOW_WIDTH // TILE_SIZE
@@ -290,6 +305,7 @@ class Editor:
             # updating
             self.animation_update(dt)
             self.canvas_objects.update(dt)
+            self.object_timer.update()
 
             # drawing
             self.display_surface.fill('gray')

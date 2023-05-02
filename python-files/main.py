@@ -27,6 +27,8 @@ class Main:
     
     def imports(self):
         self.land_tiles = import_folder_dict('G:/Meu Drive/Pygame/MarioMaker/graphics/terrain/land')
+        self.water_bottom = load('G:/Meu Drive/Pygame/MarioMaker/graphics/terrain/water/water_bottom.png').convert_alpha()
+        self.water_top_animation = import_folder('G:/Meu Drive/Pygame/MarioMaker/graphics/terrain/water/aniamtion')
     
     def toggle(self):
         self.editor_active = not self.editor_active
@@ -35,7 +37,9 @@ class Main:
         self.transition.active = True
         if grid:
             self.level = Level(grid, self.switch, {
-                'land': self.land_tiles
+                'land': self.land_tiles,
+                'water bottom': self.water_bottom,
+                'water top': self.water_top_animation,
             })
     
     def run(self):

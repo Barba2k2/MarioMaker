@@ -4,10 +4,10 @@ from pygame.math import Vector2 as vector
 from settings import *
 from support import *
 
-from sprites import Generic, Player
+from sprites import Generic, Animated, Player
 
 class Level:
-    def __init__(self, grid, switch):
+    def __init__(self, grid, switch, asset_dict):
         self.display_surface = pygame.display.get_surface()
         self.switch = switch
         
@@ -21,6 +21,11 @@ class Level:
             for pos, data in layer.items():
                 if layer_name == 'terrain':
                     Generic(pos, asset_dict['land'][data], self.all_sprites)
+                if layer_name == 'water':
+                    if data == 'top':
+                        Animated(asset_dict['water top'], pos, self.all_sprites)
+                    else:
+                        Generic(pos, asset_dict['water bottom'], self.all_sprites)
                 
                 match data:
                     case 0: self.player = Player(pos, self.all_sprites)

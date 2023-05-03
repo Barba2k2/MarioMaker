@@ -8,6 +8,8 @@ from pygame.image import load
 from editor import Editor
 from level import Level
 
+from os import walk
+
 class Main:
     def __init__(self):
         pygame.init()
@@ -26,9 +28,20 @@ class Main:
         pygame.mouse.set_cursor(cursor)
     
     def imports(self):
+        # terrain
         self.land_tiles = import_folder_dict('G:/Meu Drive/Pygame/MarioMaker/graphics/terrain/land')
         self.water_bottom = load('G:/Meu Drive/Pygame/MarioMaker/graphics/terrain/water/water_bottom.png').convert_alpha()
         self.water_top_animation = import_folder('G:/Meu Drive/Pygame/MarioMaker/graphics/terrain/water/aniamtion')
+        
+        # coins
+        self.gold = import_folder('G:/Meu Drive/Pygame/MarioMaker/graphics/items/gold')
+        self.silver = import_folder('G:/Meu Drive/Pygame/MarioMaker/graphics/items/silver')
+        self.diamond = import_folder('G:/Meu Drive/Pygame/MarioMaker/graphics/items/diamond')
+        self.particle = import_folder('G:/Meu Drive/Pygame/MarioMaker/graphics/items/particle')
+        
+        # palm tress
+        self.palms = {folder: import_folder(f'G:/Meu Drive/Pygame/MarioMaker/graphics/terrain/palm/{folder}') for folder in list(walk('G:/Meu Drive/Pygame/MarioMaker/graphics/terrain/palm/'))[0][1]}
+        
     
     def toggle(self):
         self.editor_active = not self.editor_active
@@ -40,6 +53,11 @@ class Main:
                 'land': self.land_tiles,
                 'water bottom': self.water_bottom,
                 'water top': self.water_top_animation,
+                'gold': self.gold,
+                'silver': self.silver,
+                'diamond': self.diamond,
+                'particle': self.particle,
+                'palms': self.palms,
             })
     
     def run(self):

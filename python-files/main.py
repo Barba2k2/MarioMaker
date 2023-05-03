@@ -42,7 +42,12 @@ class Main:
         # palm tress
         self.palms = {folder: import_folder(f'G:/Meu Drive/Pygame/MarioMaker/graphics/terrain/palm/{folder}') for folder in list(walk('G:/Meu Drive/Pygame/MarioMaker/graphics/terrain/palm/'))[0][1]}
         
-    
+        # enemies
+        self.spikes = load('G:/Meu Drive/Pygame/MarioMaker/graphics/enemies/spikes/spikes.png').convert_alpha()
+        self.tooth = {folder: import_folder(f'G:/Meu Drive/Pygame/MarioMaker/graphics/enemies/tooth/{folder}') for folder in list(walk('G:/Meu Drive/Pygame/MarioMaker/graphics/enemies/tooth/'))[0][1]}
+        self.shell = {folder: import_folder(f'G:/Meu Drive/Pygame/MarioMaker/graphics/enemies/shell_left/{folder}') for folder in list(walk('G:/Meu Drive/Pygame/MarioMaker/graphics/enemies/shell_left/'))[0][1]}
+        print(self.shell)
+        
     def toggle(self):
         self.editor_active = not self.editor_active
     
@@ -58,6 +63,9 @@ class Main:
                 'diamond': self.diamond,
                 'particle': self.particle,
                 'palms': self.palms,
+                'spikes': self.spikes,
+                'tooth': self.tooth,
+                'shell': self.shell
             })
     
     def run(self):

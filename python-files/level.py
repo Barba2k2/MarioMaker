@@ -4,7 +4,7 @@ from pygame.math import Vector2 as vector
 from settings import *
 from support import *
 
-from sprites import Generic, Animated, Particle, Coin, Player
+from sprites import Generic, Animated, Particle, Coin, Player, Spikes, Tooth, Shell
 
 class Level:
     def __init__(self, grid, switch, asset_dict):
@@ -14,6 +14,7 @@ class Level:
         # groups
         self.all_sprites = pygame.sprite.Group()
         self.coin_sprites = pygame.sprite.Group()
+        self.damage_sprites = pygame.sprite.Group()
         
         self.build_level(grid, asset_dict)
         
@@ -40,10 +41,10 @@ class Level:
                     case 6: Coin('diamond', asset_dict['diamond'], pos, [self.all_sprites, self.coin_sprites])
                     
                     # enemies
-                    case 7: Spikes()
-                    # case 8:
-                    # case 9:
-                    # case 10:
+                    case 7: Spikes(asset_dict['spikes'], pos, [self.all_sprites, self.damage_sprites])
+                    case 8: Tooth(asset_dict['tooth'], pos, [self.all_sprites, self.damage_sprites])
+                    case 9: Shell('left', asset_dict['shell'], pos, self.all_sprites)
+                    case 10: Shell('right', asset_dict['shell'], pos, self.all_sprites)
                     
                     # palm tress
                     case 11: Animated(asset_dict['palms']['small_fg'], pos, self.all_sprites)

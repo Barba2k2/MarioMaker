@@ -83,6 +83,8 @@ class Player(Generic):
         self.direction = vector()
         self.pos = vector(self.rect.center)
         self.speed = 300
+        self.gravity = 4
+        self.on_floor = False
         
         # collision
         self.collision_sprites = collision_sprites
@@ -90,21 +92,16 @@ class Player(Generic):
         
     def input(self):
         keys = pygame.key.get_pressed()
-        # horizontal movement
+        
         if keys[pygame.K_RIGHT]:
             self.direction.x = 1
         elif keys[pygame.K_LEFT]:
             self.direction.x = -1
         else:
             self.direction.x = 0
-        
-        # vertical movement
-        if keys[pygame.K_DOWN]:
-            self.direction.y = 1
-        elif keys[pygame.K_UP]:
-            self.direction.y = -1
-        else:
-            self.direction.y = 0
+            
+        if keys[pygame.K_SPACE] and self.on_floor:
+            self.direction.y = -2
     
     def move(self, dt):
         
@@ -120,18 +117,30 @@ class Player(Generic):
         self.rect.centery = self.hitbox.centery
         self.collision('vertical')
     
+    def apply_gravity(self, dt):
+        self.direction.y += self.gravity * dt
+        self.rect.y += self.direction.y
+    
+    def check_on_floor(self):
+        floor_rect = pygame.Rect(self.hitbox.bottomleft, (self.hitbox.width, 2))
+        floor_sprites = [sprite for sprite in self.collision_sprites if sprite.rect.colliderect(floor_rect)]
+        self.on_floor = True if floor_sprites else False
+    
     def collision(self, direction):
         for sprite in self.collision_sprites:
             if sprite.rect.colliderect(self.hitbox):
                 if direction == 'horizontal':
-                    self.hitbox.right = sprite.rect.left if self.direction.x > 0 else self.hitbox.right #moving right
-                    self.hitbox.left = sprite.rect.right if self.direction.x < 0 else self.hitbox.left #moving left
+                    self.hitbox.right = sprite.rect.left if self.direction.x > 0 else self.hitbox.right # moving right
+                    self.hitbox.left = sprite.rect.right if self.direction.x < 0 else self.hitbox.left # moving left
                     self.rect.centerx, self.pos.x = self.hitbox.centerx, self.hitbox.centerx
                 else: #vertical
                     self.hitbox.top = sprite.rect.bottom if self.direction.y < 0 else self.hitbox.top
-                    self.hitbox.bottom = sprite.rect.bottom if self.direction.y > 0 else self.hitbox.bottom
+                    self.hitbox.bottom = sprite.rect.top if self.direction.y > 0 else self.hitbox.bottom
                     self.rect.centery, self.pos.y = self.hitbox.centery, self.hitbox.centery
+                    self.direction.y = 0
      
     def update(self, dt):
         self.input()
+        self.apply_gravity(dt)
         self.move(dt)
+        self.check_on_floor()

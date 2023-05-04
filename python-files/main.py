@@ -46,6 +46,7 @@ class Main:
         self.spikes = load('G:/Meu Drive/Pygame/MarioMaker/graphics/enemies/spikes/spikes.png').convert_alpha()
         self.tooth = {folder: import_folder(f'G:/Meu Drive/Pygame/MarioMaker/graphics/enemies/tooth/{folder}') for folder in list(walk('G:/Meu Drive/Pygame/MarioMaker/graphics/enemies/tooth/'))[0][1]}
         self.shell = {folder: import_folder(f'G:/Meu Drive/Pygame/MarioMaker/graphics/enemies/shell_left/{folder}') for folder in list(walk('G:/Meu Drive/Pygame/MarioMaker/graphics/enemies/shell_left/'))[0][1]}
+        self.pearl = load('G:/Meu Drive/Pygame/MarioMaker/graphics/enemies/pearl/pearl.png')
         
         # player
         self.player_graphics  = {folder: import_folder(f'G:/Meu Drive/Pygame/MarioMaker/graphics/player/{folder}') for folder in list(walk('G:/Meu Drive/Pygame/MarioMaker/graphics/player/'))[0][1]}
@@ -68,7 +69,8 @@ class Main:
                 'spikes': self.spikes,
                 'tooth': self.tooth,
                 'shell': self.shell,
-                'player': self.player_graphics
+                'player': self.player_graphics,
+                'pearl': self.pearl
             })
     
     def run(self):

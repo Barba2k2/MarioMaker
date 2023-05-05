@@ -50,6 +50,9 @@ class Main:
         
         # player
         self.player_graphics  = {folder: import_folder(f'G:/Meu Drive/Pygame/MarioMaker/graphics/player/{folder}') for folder in list(walk('G:/Meu Drive/Pygame/MarioMaker/graphics/player/'))[0][1]}
+
+        # clouds
+        self.clouds = import_folder('G:/Meu Drive/Pygame/MarioMaker/graphics/clouds')
         
     def toggle(self):
         self.editor_active = not self.editor_active
@@ -70,7 +73,8 @@ class Main:
                 'tooth': self.tooth,
                 'shell': self.shell,
                 'player': self.player_graphics,
-                'pearl': self.pearl
+                'pearl': self.pearl,
+                'clouds': self.clouds,
             })
     
     def run(self):
